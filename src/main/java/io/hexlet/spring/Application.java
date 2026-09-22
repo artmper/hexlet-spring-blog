@@ -16,4 +16,9 @@ public class Application {
     public String home() {
         return "Hello from Spring Boot 4.1.0";
     }
+
+    @GetMapping("/about")
+    public String about() {
+        return "This is simple Spring blog \uD83E\uDD17";
+    }
 }
