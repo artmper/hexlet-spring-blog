@@ -1,16 +1,24 @@
 package io.hexlet.blog.model;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import lombok.Setter;
 import lombok.Getter;
 
 @Getter
 @Setter
+@Entity
+@Table(name = "posts")
 public class Post {
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String title;
     private String content;
-    private String author;
-    private LocalDateTime createdAt;
+    private boolean published;
 }
