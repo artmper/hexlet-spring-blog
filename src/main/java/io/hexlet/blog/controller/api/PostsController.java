@@ -2,6 +2,8 @@ package io.hexlet.blog.controller.api;
 
 import io.hexlet.blog.model.Post;
 
+import io.hexlet.blog.repository.PostRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -19,24 +21,27 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
 public class PostsController {
-    private final List<Post> posts = new ArrayList<>();
+    @Autowired private PostRepository postRepository;
 
     @GetMapping
     public ResponseEntity<List<Post>> index(@RequestParam(defaultValue = "5") Integer limit) {
-        var limitedPosts = posts.stream().limit(limit).toList();
+        var limitedPosts = postRepository.findAll()
+                .stream()
+                .limit(limit)
+                .toList();
 
         return ResponseEntity.ok(limitedPosts);
     }
 
     @PostMapping
     public ResponseEntity<Post> create(@RequestBody Post post) {
-        posts.add(post);
+        postRepository.save(post);
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -47,30 +52,28 @@ public class PostsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> show(@PathVariable String id) {
-        var post = posts.stream().filter(p -> p.getId().equals(id)).findFirst();
+    public ResponseEntity<Post> show(@PathVariable Long id) {
+        var post = postRepository.findById(id);
 
         return ResponseEntity.of(post);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> update(@RequestBody Post data, @PathVariable String id) {
-        var post = posts.stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst()
+    public ResponseEntity<Post> update(@RequestBody Post data, @PathVariable Long id) {
+        var post = postRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        post.setId(data.getId());
-        post.setAuthor(data.getAuthor());
         post.setContent(data.getContent());
         post.setTitle(data.getTitle());
+        post.setPublished(data.isPublished());
+        postRepository.save(post);
 
         return ResponseEntity.ok(post);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> destroy(@PathVariable String id) {
-        posts.removeIf(p -> p.getId().equals(id));
+    public ResponseEntity<Void> destroy(@PathVariable Long id) {
+        postRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }
