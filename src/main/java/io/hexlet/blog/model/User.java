@@ -2,6 +2,8 @@ package io.hexlet.blog.model;
 
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +18,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(min = 2, max = 30, message = "Имя должно быть от 2 до 30 символов")
     private String firstName;
+    @NotBlank
+    @Size(min = 2, max = 30, message = "Фамилия должна быть от 2 до 30 символов")
     private String lastName;
 
     @Column(nullable = false, unique = true)
