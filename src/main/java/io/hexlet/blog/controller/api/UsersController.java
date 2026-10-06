@@ -4,8 +4,6 @@ import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.model.User;
 import io.hexlet.blog.repository.UserRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

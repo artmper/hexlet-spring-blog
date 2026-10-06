@@ -4,8 +4,6 @@ import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
