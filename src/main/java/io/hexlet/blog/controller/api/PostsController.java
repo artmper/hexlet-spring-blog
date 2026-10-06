@@ -29,7 +29,12 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/posts")
 public class PostsController {
-    @Autowired private PostRepository postRepository;
+
+    private final PostRepository postRepository;
+
+    public PostsController(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
 
     @GetMapping
     public ResponseEntity<Page<Post>> getPublishedPosts(

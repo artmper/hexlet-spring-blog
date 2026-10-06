@@ -30,6 +30,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         + Objects.requireNonNull(
                                 ex.getBindingResult().getFieldError()).getDefaultMessage());
     }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
