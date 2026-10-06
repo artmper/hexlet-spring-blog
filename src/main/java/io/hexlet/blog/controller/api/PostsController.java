@@ -5,6 +5,12 @@ import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -20,21 +26,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/posts")
 public class PostsController {
     @Autowired private PostRepository postRepository;
 
     @GetMapping
-    public ResponseEntity<List<Post>> index(@RequestParam(defaultValue = "5") Integer limit) {
-        var limitedPosts = postRepository.findAll()
-                .stream()
-                .limit(limit)
-                .toList();
+    public ResponseEntity<Page<Post>> getPublishedPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        Pageable pageable = PageRequest.of(
+                page,
+                pageSize,
+                Sort.by("createdAt").descending());
+        var pagedPosts = postRepository.findByPublishedTrue(pageable);
 
-        return ResponseEntity.ok(limitedPosts);
+        return ResponseEntity.ok(pagedPosts);
     }
 
     @PostMapping
