@@ -53,11 +53,11 @@ tasks.jacocoTestReport {
     }
 }
 
-tasks.check {
+tasks.named("sonar") {
     dependsOn(tasks.jacocoTestReport)
 }
 
-tasks.named("sonar") {
+tasks.check {
     dependsOn(tasks.jacocoTestReport)
 }
 
