@@ -1,5 +1,6 @@
 package io.hexlet.blog.controller.api;
 
+import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
 
@@ -88,7 +89,7 @@ public class PostsControllerTest {
         Long postId = ((Number) JsonPath.read(responseJson, "$.id")).longValue();
 
         var post = postRepository.findById(postId).orElseThrow(
-                () -> new AssertionError("Post '" + postId + "' not found"));
+                () -> new ResourceNotFoundException("Post '" + postId + "' not found"));
 
         assertThat(post.getTitle()).isEqualTo(("New post"));
         assertThat(post.getContent()).isEqualTo(("Post content"));
@@ -115,7 +116,7 @@ public class PostsControllerTest {
         var postId = post.getId();
 
         post = postRepository.findById(postId).orElseThrow(
-                () -> new AssertionError("Post '" + postId + "' not found"));
+                () -> new ResourceNotFoundException("Post '" + postId + "' not found"));
         assertThat(post.getTitle()).isEqualTo(("New post 2"));
         assertThat(post.getContent()).isEqualTo(("Post content 2"));
     }

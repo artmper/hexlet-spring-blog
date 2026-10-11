@@ -1,5 +1,6 @@
 package io.hexlet.blog.controller.api;
 
+import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.model.User;
 import io.hexlet.blog.repository.UserRepository;
 
@@ -94,7 +95,7 @@ public class UsersControllerTest {
         Long userId = ((Number) JsonPath.read(responseJson, "$.id")).longValue();
 
         var user = userRepository.findById(userId).orElseThrow(
-                () -> new AssertionError("User '" + userId + "' not found"));
+                () -> new ResourceNotFoundException("User '" + userId + "' not found"));
 
         assertThat(user.getFirstName()).isEqualTo(("John"));
         assertThat(user.getLastName()).isEqualTo(("Connor"));
@@ -123,7 +124,7 @@ public class UsersControllerTest {
         mockMvc.perform(request).andExpect(status().isOk());
         var userId = user.getId();
         user = userRepository.findById(userId).orElseThrow(
-                () -> new AssertionError("Post '" + userId + "' not found"));
+                () -> new ResourceNotFoundException("Post '" + userId + "' not found"));
 
         assertThat(user.getFirstName()).isEqualTo(("Mike"));
         assertThat(user.getLastName()).isEqualTo(("Shinoda"));
