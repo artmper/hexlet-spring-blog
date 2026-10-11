@@ -44,7 +44,7 @@ tasks.jacocoTestReport {
     dependsOn(tasks.test)
     classDirectories.setFrom(
         files(classDirectories.files.map {
-            fileTree(it) { exclude("build/generated/**") }
+            fileTree(it) { exclude("build/generated/sources/**") }
         })
     )
     reports {
@@ -57,6 +57,10 @@ tasks.check {
     dependsOn(tasks.jacocoTestReport)
 }
 
+tasks.named("sonar") {
+    dependsOn(tasks.jacocoTestReport)
+}
+
 sonar {
     properties {
         property("sonar.projectKey", "artmper_hexlet-spring-blog")
@@ -66,10 +70,5 @@ sonar {
         property("sonar.junit.reportPaths", "build/test-results/test")
         property("sonar.jacoco.reportPaths", "build/jacoco/test.exec")
         property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
-        property("sonar.sources", "src/main/java,build/generated/sources")
     }
-}
-
-tasks.named("sonar") {
-    dependsOn(tasks.jacocoTestReport)
 }
