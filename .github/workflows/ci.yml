@@ -19,7 +19,7 @@ jobs:
           java-version: "24"
           
       - name: Cache Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@90ac61502479f6fa11296f0ba83f3e5898d022b7 # v6
         
       - name: Build & Test
         run: ./gradlew clean build test
