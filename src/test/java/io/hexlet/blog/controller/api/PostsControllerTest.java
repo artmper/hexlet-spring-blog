@@ -87,9 +87,11 @@ public class PostsControllerTest {
         String responseJson = result.getResponse().getContentAsString();
         Long postId = ((Number) JsonPath.read(responseJson, "$.id")).longValue();
 
-        var user = postRepository.findById(postId).get();
-        assertThat(user.getTitle()).isEqualTo(("New post"));
-        assertThat(user.getContent()).isEqualTo(("Post content"));
+        var post = postRepository.findById(postId).orElseThrow(
+                () -> new AssertionError("Post '" + postId + "' not found"));
+
+        assertThat(post.getTitle()).isEqualTo(("New post"));
+        assertThat(post.getContent()).isEqualTo(("Post content"));
     }
 
     @Test
@@ -110,8 +112,10 @@ public class PostsControllerTest {
                         .content(om.writeValueAsString(data));
 
         mockMvc.perform(request).andExpect(status().isOk());
+        var postId = post.getId();
 
-        post = postRepository.findById(post.getId()).get();
+        post = postRepository.findById(postId).orElseThrow(
+                () -> new AssertionError("Post '" + postId + "' not found"));
         assertThat(post.getTitle()).isEqualTo(("New post 2"));
         assertThat(post.getContent()).isEqualTo(("Post content 2"));
     }

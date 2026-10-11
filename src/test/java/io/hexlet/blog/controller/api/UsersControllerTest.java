@@ -93,7 +93,9 @@ public class UsersControllerTest {
         String responseJson = result.getResponse().getContentAsString();
         Long userId = ((Number) JsonPath.read(responseJson, "$.id")).longValue();
 
-        var user = userRepository.findById(userId).get();
+        var user = userRepository.findById(userId).orElseThrow(
+                () -> new AssertionError("User '" + userId + "' not found"));
+
         assertThat(user.getFirstName()).isEqualTo(("John"));
         assertThat(user.getLastName()).isEqualTo(("Connor"));
         assertThat(user.getEmail()).isEqualTo(("terminator85@yahoo.com"));
@@ -119,8 +121,10 @@ public class UsersControllerTest {
                         .content(om.writeValueAsString(data));
 
         mockMvc.perform(request).andExpect(status().isOk());
+        var userId = user.getId();
+        user = userRepository.findById(userId).orElseThrow(
+                () -> new AssertionError("Post '" + userId + "' not found"));
 
-        user = userRepository.findById(user.getId()).get();
         assertThat(user.getFirstName()).isEqualTo(("Mike"));
         assertThat(user.getLastName()).isEqualTo(("Shinoda"));
     }

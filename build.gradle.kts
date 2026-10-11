@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.lombok)
     id("org.springframework.boot") version "4.1.0"
     id("io.spring.dependency-management") version "1.1.7"
+    id("org.sonarqube") version "7.5.0.8588"
     jacoco
 }
 
@@ -49,4 +50,16 @@ tasks.jacocoTestReport {
 
 tasks.check {
     dependsOn(tasks.jacocoTestReport)
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "artmper_hexlet-spring-blog")
+        property("sonar.organization", "artmper")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.java.coveragePlugin", "jacoco")
+        property("sonar.junit.reportPaths", "build/test-results/test")
+        property("sonar.jacoco.reportPaths", "build/jacoco/test.exec")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
+    }
 }
