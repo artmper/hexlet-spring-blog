@@ -42,6 +42,11 @@ tasks.test {
 
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
+    classDirectories.setFrom(
+        files(classDirectories.files.map {
+            fileTree(it) { exclude("build/generated/**") }
+        })
+    )
     reports {
         xml.required.set(true)
         html.required.set(true)
@@ -61,5 +66,10 @@ sonar {
         property("sonar.junit.reportPaths", "build/test-results/test")
         property("sonar.jacoco.reportPaths", "build/jacoco/test.exec")
         property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
+        property("sonar.sources", "src/main/java,build/generated/sources")
     }
+}
+
+tasks.named("sonar") {
+    dependsOn(tasks.jacocoTestReport)
 }
