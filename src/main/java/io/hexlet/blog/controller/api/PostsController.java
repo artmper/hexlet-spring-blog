@@ -1,5 +1,7 @@
 package io.hexlet.blog.controller.api;
 
+import io.hexlet.blog.component.PostMapper;
+import io.hexlet.blog.dto.PostDTO;
 import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
@@ -29,13 +31,15 @@ import jakarta.validation.Valid;
 public class PostsController {
 
     private final PostRepository postRepository;
+    private final PostMapper postMapper;
 
-    public PostsController(PostRepository postRepository) {
+    public PostsController(PostRepository postRepository, PostMapper postMapper) {
         this.postRepository = postRepository;
+        this.postMapper = postMapper;
     }
 
     @GetMapping
-    public ResponseEntity<Page<Post>> getPublishedPosts(
+    public ResponseEntity<Page<PostDTO>> getPublishedPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int pageSize) {
         Pageable pageable = PageRequest.of(
@@ -43,8 +47,9 @@ public class PostsController {
                 pageSize,
                 Sort.by("createdAt").descending());
         var pagedPosts = postRepository.findByPublishedTrue(pageable);
+        var postsDTO = pagedPosts.map(postMapper::toDTO);
 
-        return ResponseEntity.ok(pagedPosts);
+        return ResponseEntity.ok(postsDTO);
     }
 
     @PostMapping

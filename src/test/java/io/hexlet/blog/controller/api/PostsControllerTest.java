@@ -116,7 +116,7 @@ public class PostsControllerTest {
         var postId = post.getId();
 
         post = postRepository.findById(postId).orElseThrow(
-                () -> new ResourceNotFoundException("Post '" + postId + "' not found"));
+                () -> new ResourceNotFoundException ("Post '" + postId + "' not found"));
         assertThat(post.getTitle()).isEqualTo(("New post 2"));
         assertThat(post.getContent()).isEqualTo(("Post content 2"));
     }
