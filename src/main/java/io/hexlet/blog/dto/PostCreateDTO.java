@@ -18,5 +18,7 @@ public class PostCreateDTO {
     @Size(min = 5)
     private String content;
 
+    @NotBlank
+    private boolean published;
 }
 

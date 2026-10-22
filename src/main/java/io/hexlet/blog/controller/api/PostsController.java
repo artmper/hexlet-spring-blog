@@ -1,11 +1,10 @@
 package io.hexlet.blog.controller.api;
 
-import io.hexlet.blog.component.PostMapper;
+import io.hexlet.blog.mapper.PostMapper;
 import io.hexlet.blog.dto.PostCreateDTO;
 import io.hexlet.blog.dto.PostDTO;
 import io.hexlet.blog.dto.PostUpdateDTO;
 import io.hexlet.blog.exception.ResourceNotFoundException;
-import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
 
 import org.springframework.data.domain.Page;
@@ -27,8 +26,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -58,20 +55,9 @@ public class PostsController {
 
     @PostMapping
     public ResponseEntity<PostDTO> create(@Valid @RequestBody PostCreateDTO dto) {
-        var post = new Post();
-        post.setTitle(dto.getTitle());
-        post.setContent(dto.getContent());
-        post.setPublished(true);
-        post.setCreatedAt(LocalDateTime.now());
-        post.setUpdatedAt(LocalDateTime.now());
-
+        var post = postMapper.toEntity(dto);
         postRepository.save(post);
-
-        var response = new PostDTO();
-        response.setId(post.getId());
-        response.setTitle(post.getTitle());
-        response.setContent(post.getContent());
-        response.setPublished(post.isPublished());
+        var response = postMapper.toDTO(post);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -90,18 +76,10 @@ public class PostsController {
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Post '" + id + "' not found"));
 
-        post.setContent(data.getContent());
-        post.setTitle(data.getTitle());
-        post.setCreatedAt(LocalDateTime.now());
-        post.setUpdatedAt(LocalDateTime.now());
-
+        postMapper.updateEntityFromDTO(data, post);
         postRepository.save(post);
 
-        var response = new PostDTO();
-        response.setId(post.getId());
-        response.setTitle(post.getTitle());
-        response.setContent(post.getContent());
-        response.setPublished(post.isPublished());
+        var response = postMapper.toDTO(post);
 
         return ResponseEntity.ok(response);
     }

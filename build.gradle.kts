@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     id("org.sonarqube") version "7.5.0.8588"
     jacoco
+    kotlin("kapt") version "2.4.10"
 }
 
 group = "io.hexlet"
@@ -21,6 +22,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("net.datafaker:datafaker:2.7.0")
+    implementation("org.mapstruct:mapstruct:1.6.3")
 
     testImplementation("org.instancio:instancio-junit:5.6.0")
     testImplementation("com.h2database:h2")
@@ -30,6 +32,9 @@ dependencies {
     testImplementation("net.javacrumbs.json-unit:json-unit-assertj:6.2.0")
 
     runtimeOnly("com.h2database:h2")
+
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+    testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 }
 
 tasks.withType<Test> {
