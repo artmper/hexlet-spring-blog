@@ -1,4 +1,4 @@
-package io.hexlet.blog.dto;
+package io.hexlet.blog.dto.user;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;

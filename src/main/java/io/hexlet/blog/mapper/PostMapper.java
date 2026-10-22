@@ -1,8 +1,8 @@
 package io.hexlet.blog.mapper;
 
-import io.hexlet.blog.dto.PostCreateDTO;
-import io.hexlet.blog.dto.PostDTO;
-import io.hexlet.blog.dto.PostUpdateDTO;
+import io.hexlet.blog.dto.post.PostCreateDTO;
+import io.hexlet.blog.dto.post.PostDTO;
+import io.hexlet.blog.dto.post.PostUpdateDTO;
 import io.hexlet.blog.model.Post;
 
 import org.mapstruct.Mapper;

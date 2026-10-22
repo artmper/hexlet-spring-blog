@@ -1,4 +1,4 @@
-package io.hexlet.blog.dto;
+package io.hexlet.blog.dto.post;
 
 import lombok.Getter;
 import lombok.Setter;

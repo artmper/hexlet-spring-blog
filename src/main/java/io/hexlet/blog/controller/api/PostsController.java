@@ -1,9 +1,9 @@
 package io.hexlet.blog.controller.api;
 
 import io.hexlet.blog.mapper.PostMapper;
-import io.hexlet.blog.dto.PostCreateDTO;
-import io.hexlet.blog.dto.PostDTO;
-import io.hexlet.blog.dto.PostUpdateDTO;
+import io.hexlet.blog.dto.post.PostCreateDTO;
+import io.hexlet.blog.dto.post.PostDTO;
+import io.hexlet.blog.dto.post.PostUpdateDTO;
 import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.repository.PostRepository;
 
