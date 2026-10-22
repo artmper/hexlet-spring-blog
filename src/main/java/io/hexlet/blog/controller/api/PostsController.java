@@ -1,6 +1,7 @@
 package io.hexlet.blog.controller.api;
 
 import io.hexlet.blog.component.PostMapper;
+import io.hexlet.blog.dto.PostCreateDTO;
 import io.hexlet.blog.dto.PostDTO;
 import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.model.Post;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -53,10 +56,23 @@ public class PostsController {
     }
 
     @PostMapping
-    public ResponseEntity<Post> create(@Valid @RequestBody Post post) {
-        Post savedPost = postRepository.save(post);
+    public ResponseEntity<PostDTO> create(@Valid @RequestBody PostCreateDTO dto) {
+        var post = new Post();
+        post.setTitle(dto.getTitle());
+        post.setContent(dto.getContent());
+        post.setPublished(true);
+        post.setCreatedAt(LocalDateTime.now());
+        post.setUpdatedAt(LocalDateTime.now());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPost);
+        postRepository.save(post);
+
+        var response = new PostDTO();
+        response.setId(post.getId());
+        response.setTitle(post.getTitle());
+        response.setContent(post.getContent());
+        response.setPublished(post.isPublished());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{id}")
