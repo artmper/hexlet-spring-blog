@@ -3,6 +3,7 @@ package io.hexlet.blog.controller.api;
 import io.hexlet.blog.component.PostMapper;
 import io.hexlet.blog.dto.PostCreateDTO;
 import io.hexlet.blog.dto.PostDTO;
+import io.hexlet.blog.dto.PostUpdateDTO;
 import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.model.Post;
 import io.hexlet.blog.repository.PostRepository;
@@ -76,24 +77,33 @@ public class PostsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> show(@PathVariable Long id) {
+    public ResponseEntity<PostDTO> show(@PathVariable Long id) {
         var post = postRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Post '" + id + "' not found"));
 
-        return ResponseEntity.status(HttpStatus.OK).body(post);
+        var postDTO = postMapper.toDTO(post);
+        return ResponseEntity.status(HttpStatus.OK).body(postDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> update(@Valid @RequestBody Post data, @PathVariable Long id) {
+    public ResponseEntity<PostDTO> update(@Valid @RequestBody PostUpdateDTO data, @PathVariable Long id) {
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Post '" + id + "' not found"));
 
         post.setContent(data.getContent());
         post.setTitle(data.getTitle());
-        post.setPublished(data.isPublished());
-        var savedPost = postRepository.save(post);
+        post.setCreatedAt(LocalDateTime.now());
+        post.setUpdatedAt(LocalDateTime.now());
 
-        return ResponseEntity.ok(savedPost);
+        postRepository.save(post);
+
+        var response = new PostDTO();
+        response.setId(post.getId());
+        response.setTitle(post.getTitle());
+        response.setContent(post.getContent());
+        response.setPublished(post.isPublished());
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
