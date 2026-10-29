@@ -7,6 +7,7 @@ import io.hexlet.blog.dto.post.PostUpdateDTO;
 import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.repository.PostRepository;
 
+import io.hexlet.blog.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,10 +34,14 @@ public class PostsController {
 
     private final PostRepository postRepository;
     private final PostMapper postMapper;
+    private final UserRepository userRepository;
 
-    public PostsController(PostRepository postRepository, PostMapper postMapper) {
+    public PostsController(PostRepository postRepository,
+                           UserRepository userRepository,
+                           PostMapper postMapper) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
+        this.userRepository = userRepository;
     }
 
     @GetMapping
@@ -55,8 +60,14 @@ public class PostsController {
 
     @PostMapping
     public ResponseEntity<PostDTO> create(@Valid @RequestBody PostCreateDTO dto) {
+        var user = userRepository.findById(dto.getUserId())
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "User with id=" + dto.getUserId() + " not found"));
         var post = postMapper.toEntity(dto);
+        post.setUser(user);
         postRepository.save(post);
+
         var response = postMapper.toDTO(post);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

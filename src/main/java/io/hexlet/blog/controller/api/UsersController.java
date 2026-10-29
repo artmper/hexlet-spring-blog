@@ -2,10 +2,10 @@ package io.hexlet.blog.controller.api;
 
 import io.hexlet.blog.dto.user.CreateUserDTO;
 import io.hexlet.blog.dto.user.UserDTO;
+import io.hexlet.blog.dto.user.UserPatchDTO;
 import io.hexlet.blog.dto.user.UserUpdateDTO;
 import io.hexlet.blog.exception.ResourceNotFoundException;
 import io.hexlet.blog.mapper.UserMapper;
-import io.hexlet.blog.model.User;
 import io.hexlet.blog.repository.UserRepository;
 
 import org.springframework.http.HttpStatus;
@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -75,6 +76,18 @@ public class UsersController {
                 .orElseThrow(() -> new ResourceNotFoundException("User '" + id + "' not found"));
 
         userMapper.updateEntityFromDTO(data, user);
+        userRepository.save(user);
+        var response = userMapper.toDTO(user);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping(path = "/{id}")
+    public ResponseEntity<UserDTO> patch(@Valid @RequestBody UserPatchDTO userData, @PathVariable Long id) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User '" + id + "' not found"));
+
+        userMapper.patchEntityFromDTO(userData, user);
         userRepository.save(user);
         var response = userMapper.toDTO(user);
 

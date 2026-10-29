@@ -37,6 +37,7 @@ public class ModelGenerator {
             post.setTitle(faker.book().title());
             post.setContent(faker.lorem().paragraph());
             post.setPublished(faker.bool().bool());
+            post.setUser(user);
             postRepository.save(post);
         }
     }

@@ -1,11 +1,11 @@
 plugins {
     java
+    jacoco
     alias(libs.plugins.lombok)
     id("org.springframework.boot") version "4.1.0"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.sonarqube") version "7.5.0.8588"
-    jacoco
-    kotlin("kapt") version "2.4.10"
+    //kotlin("kapt") version "2.4.10"
 }
 
 group = "io.hexlet"
@@ -23,6 +23,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("net.datafaker:datafaker:2.7.0")
     implementation("org.mapstruct:mapstruct:1.6.3")
+    implementation("org.openapitools:jackson-databind-nullable:0.2.11")
 
     testImplementation("org.instancio:instancio-junit:5.6.0")
     testImplementation("com.h2database:h2")

@@ -1,6 +1,7 @@
 package io.hexlet.blog.dto.post;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import lombok.Getter;
@@ -18,7 +19,10 @@ public class PostCreateDTO {
     @Size(min = 5)
     private String content;
 
-    @NotBlank
-    private boolean published;
+    @NotNull
+    private Boolean published;
+
+    @NotNull
+    private Long userId;
 }
 
